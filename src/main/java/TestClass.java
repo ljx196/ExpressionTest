@@ -30,8 +30,8 @@ public class TestClass {
 
     @Test
     public void test3() {
-        String str = "(e?x?p)";
-        System.out.println(str.replaceAll("(.*)e\\?x\\?p(.*)", "$1"));
+        String str = "e?x?p";
+        System.out.println(str.replaceAll("(.*)e\\?x\\?p(.*)", "$1").length());
         System.out.println(str.split("e?x?p"));
         System.out.println(str.indexOf("cos("));
         System.out.println(str.indexOf(""));
@@ -48,4 +48,10 @@ public class TestClass {
         System.out.println(C);
     }
 
+    @Test
+    public void test5() {
+        String str = "1(POINT";
+        System.out.println("123");
+        System.out.println(str.indexOf("(", 1));
+    }
 }

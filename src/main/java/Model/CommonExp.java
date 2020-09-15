@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.net.CookieHandler;
 import java.util.List;
+import java.util.TimerTask;
 
 public class CommonExp extends ExpOrigin{
 
@@ -92,87 +93,58 @@ public class CommonExp extends ExpOrigin{
         return "+";
     }
 
-//    按照分句的等级来划分
+//    按照分句的等级来划分 如果有操作匹配上了则返回true
     public boolean loadExpLevel(List<String> ops) {
-//        boolean RT = false;
-//        boolean RT = false;
-//        boolean SIGNAL = false;
-//        int SIDX = 0;
-//        String NOWOP = "+";
-//        for (int i = 0; i < this.Exp.length(); i++) {
-//            for (String op : ops) {
-//                if (String.valueOf(this.Exp.charAt(i)).equals(op)) {
-////                    i = patternMatch(i);
-//                    loadExpCon(SIDX, i, NOWOP);
-//                    NOWOP = op;
-//                    SIDX = i + 1;
-//                    RT = true;
-//                }
-//            }
-//        }
-//        if (RT) {
-//            loadExpCon(SIDX, this.Exp.length(), NOWOP);
-//        }
-//        String NOWOP = "+";
-//        for (int i = 0; i < this.Exp.length(); ++i) {
-//            for (String op : ops) {
-//                String CTMP = String.valueOf(this.Exp.charAt(i));
-//                if (CTMP.equals(op)) {
-//                    if (i == 0) {
-//                        NOWOP = CTMP;
-//                        i = loadExpCon(NOWOP, i, ops);
-//                        continue;
-//                    }
-//                    RT = true;
-//                }
-//            }
-//        }
         boolean RT = false;
-        String NOWOP = getFirstOp(ops);
-        int i;
-        if (NOWOP.equals("#")) {
-            i = 0;
-        } else {
-            i = matchOps(0, ops);
-        }
+        boolean FIRTST = true;
+        int i = 0;
         while (i < this.Exp.length()) {
-            i = loadExpCon(i, NOWOP, ops);
-            if (i != -1) {
-                RT = true;
+            String TOP = findOP(i);
+            if (!TOP.equals("#")) {
+                i += TOP.length();
+            }
+            String PAT = findPAT(i);
+            i = nextPAT(PAT, i);
+            if (FIRTST) {
+                FIRTST = false;
+                continue;
+            }
+            if (ops.contains(TOP)) {
+                loadExpCon(TOP, PAT);
             }
         }
+
         return RT;
     }
-//    获取Exp中第一个字符的符号，如果第一个字符前没符号则返回#
-    public String getFirstOp(List<String> ops) {
-        return "";
+
+//    找到IDX为起点的OP 如果没有则返回
+    public String findOP(int IDX) {
+        for (List<String> ops : this.Operators) {
+            for (String op : ops) {
+                if (this.Exp.indexOf(op) == IDX) {
+                    return op;
+                }
+            }
+        }
+        return null;
     }
 
-//    从IDX开始的位置匹配ops中的符号，如果IDX开始的字符串没有匹配的ops则返回-1
-    public int matchOps(int IDX, List<String> ops) {
+//    找到IDX起点的TYPE
+    public String findPAT(int IDX) {
+        for (String type : this.Patterns) {
+
+        }
+        return null;
+    }
+
+//    以IDX为起点的，找到下一个OP的位置
+    public int nextPAT(String TYPE, int IDX) {
 
         return 0;
     }
 
 //    输入符号位置信息，创建下一个对象。
-    public int loadExpCon(int SIDX, String NOWOP, List<String> ops) {
-//        if (SIDX >= EIDX) {
-//            return;
-//        }
-//        String TmpExp = this.Exp.substring(SIDX, EIDX);
-//        ExpOrigin exp = new CommonExp(TmpExp);
-//        exp.Operator = NOWOP;
-//        this.ExpCon.add(exp);
-        int IDX = SIDX + 1;
-        for (; IDX < this.Exp.length(); IDX++) {
-            for (String op : ops) {
-                String CTMP = String.valueOf(this.Exp.charAt(IDX));
-                if (op.equals(CTMP)) {
-
-                }
-            }
-        }
-        return -1;
+    public void loadExpCon(String OP, String TTYPE) {
     }
 
     @Override
