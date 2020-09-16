@@ -50,8 +50,21 @@ public class TestClass {
 
     @Test
     public void test5() {
-        String str = "1(POINT";
-        System.out.println("123");
-        System.out.println(str.indexOf("(", 1));
+        String str = "(e?x?p)";
+        String mstr = "111122233223";
+        System.out.println(mstr.indexOf("22", 10));
+        List<String> strs1 = new ArrayList<String>(Arrays.asList("1", "2", "3"));
+        List<String> strss = Arrays.asList("1", "3", "4");
+        System.out.println(strs1.indexOf("3"));
+        System.out.println(mstr.substring(2, 4));
+        String strs = str.replaceAll("(.*)e\\?x\\?p(.*)", "$1");
+        System.out.println(strs);
+        System.out.println(mstr.indexOf(strs, 2));
+    }
+
+    @Test
+    public void test6() {
+        CommonExp commonExp = new CommonExp();
+        System.out.println(commonExp.minvs(3, 4));
     }
 }
