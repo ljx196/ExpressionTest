@@ -156,7 +156,11 @@ public class CommonExp extends ExpOrigin{
         String ftype = type.replaceAll("(.*)e\\?x\\?p(.*)", "$1");
         String ltype = type.replaceAll("(.*)e\\?x\\?p(.*)", "$2");
         if (type.indexOf("(") == -1) {
-            return indexFirstOP(IDX);
+            int TMP = indexFirstOP(IDX);
+            if (TMP == -1) {
+                return this.Exp.length();
+            }
+            return TMP;
         } else {
             int PIT = IDX + ftype.length();
             PIT = matchBracket(PIT, 1);
