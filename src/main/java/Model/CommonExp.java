@@ -1,11 +1,6 @@
 package Model;
 
-import com.sun.xml.internal.org.jvnet.fastinfoset.sax.FastInfosetReader;
-import org.junit.Test;
-
-import java.net.CookieHandler;
 import java.util.List;
-import java.util.TimerTask;
 
 public class CommonExp extends ExpOrigin{
 
@@ -16,8 +11,11 @@ public class CommonExp extends ExpOrigin{
     public CommonExp(String Exp) {
         this();
         this.Exp = Exp;
-        this.Operator = "+";
-        paraseExp();
+        this.Operator = "#e?x?p";
+        if (!paraseExp()) {
+            this.Type = "Variable";
+        }
+        collectVariables(this);
     }
 
     @Override
@@ -30,9 +28,23 @@ public class CommonExp extends ExpOrigin{
         ShowStructure(this);
     }
 
+    public void ShowPlainStru() {
+        for (ExpOrigin exp: this.ExpCon) {
+            System.out.print(exp.Operator.replaceAll("e\\?x\\?p", exp.Exp) + " ");
+        }
+        System.out.println();
+    }
+
+    public void ShowVariables() {
+        for (String v : this.Variables) {
+            System.out.print(v + " ");
+        }
+        System.out.println();
+    }
+
     public void ShowStructure(ExpOrigin expOrigin) {
         if (expOrigin.ExpCon.size() == 0) {
-            System.out.println(expOrigin.Operator + expOrigin.Exp);
+            System.out.println(expOrigin.Operator.replaceAll("e\\?x\\?p", expOrigin.Exp));
             return;
         }
         for (ExpOrigin expO : expOrigin.ExpCon) {
@@ -60,8 +72,10 @@ public class CommonExp extends ExpOrigin{
 
     }
 
-    public void add(String Exp) {
+    @Override
+    public boolean contain(String Exp) {
 
+        return false;
     }
 
     @Override
@@ -70,12 +84,27 @@ public class CommonExp extends ExpOrigin{
     }
 
     @Override
-    public void paraseExp() {
+    public boolean paraseExp() {
 //        怎么解析 目前先直接 通过加减乘除后面可以添加；
+        boolean RT = false;
         for (List<String> ops : this.Operators) {
             if (loadExpLevel(ops)) {
+                RT = true;
                 break;
             }
+        }
+        return RT;
+    }
+
+    public void collectVariables(ExpOrigin expOrigin) {
+        if (expOrigin.Type != null && expOrigin.Type.equals("Variable")) {
+            if (!this.Variables.contains(expOrigin.Exp)) {
+                this.Variables.add(expOrigin.Exp);
+            }
+            return ;
+        }
+        for (ExpOrigin expOrigin1 : expOrigin.ExpCon) {
+            collectVariables(expOrigin1);
         }
     }
 
@@ -101,24 +130,32 @@ public class CommonExp extends ExpOrigin{
         String TMP = "";
         String NOWOP = null;
         int i = 0;
-        while (i < this.Exp.length()) {
+        while (i <= this.Exp.length()) {
             String TOP = findOP(i);
             if (!TOP.equals("#")) {
                 i += TOP.length();
             }
             if (NOWOP == null) {
                 NOWOP = TOP;
+                TOP = "";
             }
-            if ((ops.contains(TOP) || !(NOWOP.equals("#") && TOP.equals("#"))) && FIRST) {
+            if (NOWOP.equals("#") && TOP.equals("#")) {
+                break;
+            }
+            if ((ops.contains(TOP) || TOP.equals("#")) && FIRST) {
                 loadExpCon(NOWOP, TMP);
                 NOWOP = TOP;
+                if (TOP.equals("#")) {
+                    break;
+                }
                 TMP = "";
-                FIRST = true;
+                TOP = "";
                 RT = true;
             }
             String PAT = findPAT(i);
-            TMP += TOP + TMP;
-            i = nextPAT(PAT, i);
+            TMP += TOP + PAT;
+            i += PAT.length();
+            FIRST = true;
         }
 
         return RT;
@@ -128,7 +165,7 @@ public class CommonExp extends ExpOrigin{
     public String findOP(int IDX) {
         for (List<String> ops : this.Operators) {
             for (String op : ops) {
-                if (this.Exp.indexOf(op) == IDX) {
+                if (this.Exp.indexOf(op, IDX) == IDX) {
                     return op;
                 }
             }
@@ -179,7 +216,11 @@ public class CommonExp extends ExpOrigin{
                 }
             }
         }
-        return MIN;
+        if (MIN == 999) {
+            return -1;
+        } else {
+            return MIN;
+        }
     }
 
 //    返回两个参数中最小值
@@ -202,16 +243,25 @@ public class CommonExp extends ExpOrigin{
         return PIT;
     }
 
-
-//    以IDX为起点的，找到下一个OP的位置
-    public int nextPAT(String TYPE, int IDX) {
-
-        return 0;
-    }
-
 //    输入符号位置信息，创建下一个对象。
-    public void loadExpCon(String OP, String TTYPE) {
+    public void loadExpCon(String OP, String PAT) {
+        String Exp = "";
+        String pat = "";
+        for (String type : this.Patterns) {
+            String ftype = type.replaceAll("(.*)e\\?x\\?p(.*)", "$1");
+            String ltype = type.replaceAll("(.*)e\\?x\\?p(.*)", "$2");
+            if (PAT.indexOf(ftype) == 0) {
+                String TPAT = type.replaceAll("\\(", "\\\\(").replaceAll("\\)", "\\\\)").replaceAll("e\\?x\\?p", "(.*)");
+                Exp = PAT.replaceAll(TPAT, "$1");
+                pat = type;
+                break;
+            }
+        }
+        ExpOrigin expOrigin = new CommonExp(Exp);
+        expOrigin.Operator = OP + pat;
+        this.ExpCon.add(expOrigin);
     }
+
 
     @Override
     public String toString() {

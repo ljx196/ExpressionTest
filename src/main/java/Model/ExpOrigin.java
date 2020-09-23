@@ -9,13 +9,16 @@ public abstract class ExpOrigin {
 
     List<ExpOrigin> ExpCon = new ArrayList<ExpOrigin>();
 
-    String Exp;
+    List<String> Variables = new ArrayList<String>();
 
-//    List<String> Operators = new ArrayList<String>(Arrays.asList("+", "-", "*", "/"));
-    List<List<String>> Operators = new ArrayList<List<String>>(Arrays.asList(Arrays.asList("+", "-"),
-        Arrays.asList("*", "/")));
+    public String Exp;
 
-    List<String> Patterns = new ArrayList<String>(Arrays.asList("sin(e?x?p)", "cos(e?x?p)", "tan(e?x?p)", "(e?x?p)", "e?x?p"));
+    List<List<String>> Operators = Arrays.asList(Arrays.asList("=", ">=", "<=", ">", "<"),
+        Arrays.asList("+", "-"),
+        Arrays.asList("*", "/"),
+        Arrays.asList("^", "_"));
+
+    List<String> Patterns = Arrays.asList("sin(e?x?p)", "cos(e?x?p)", "tan(e?x?p)", "(e?x?p)", "e?x?p");
 
     String Operator;
 
@@ -35,6 +38,8 @@ public abstract class ExpOrigin {
 
     abstract public String query(String query);
 
-    abstract public void paraseExp();
+    abstract public boolean contain(String Exp);
+
+    abstract public boolean paraseExp();
 
 }

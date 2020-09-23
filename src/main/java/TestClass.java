@@ -64,7 +64,26 @@ public class TestClass {
 
     @Test
     public void test6() {
-        CommonExp commonExp = new CommonExp();
-        System.out.println(commonExp.minvs(3, 4));
+        String PAT = "e?x?p";
+        String pat = PAT.replaceAll("\\(", "\\\\(").replaceAll("\\)", "\\\\)").replaceAll("e\\?x\\?p", "(.*)");
+        System.out.println(pat);
+        String str = "123+4";
+        System.out.println(str.replaceAll(pat, "$1"));
     }
+
+    @Test
+    public void test7() {
+        CommonExp commonExp = new CommonExp("a+b+(c+d+a)");
+        commonExp.ShowStructure();
+        commonExp.ShowPlainStru();
+        commonExp.ShowVariables();
+    }
+
+    @Test
+    public void test8() {
+        CommonExp expOrigin = new CommonExp("f(x)>=a*x^2+b*x+c");
+        expOrigin.ShowStructure();
+        expOrigin.ShowVariables();
+    }
+
 }
