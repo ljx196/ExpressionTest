@@ -82,6 +82,10 @@ public class TestClass {
     @Test
     public void test8() {
         CommonExp expOrigin = new CommonExp("f(x)>=a*x^2+b*x+c");
+        String s = "123";
+        String b = s;
+        b = "345";
+//        test.ShowStructure();
         expOrigin.ShowStructure();
         expOrigin.ShowVariables();
     }

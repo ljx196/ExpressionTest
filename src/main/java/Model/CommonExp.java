@@ -89,6 +89,7 @@ public class CommonExp extends ExpOrigin{
         boolean RT = false;
         for (List<String> ops : this.Operators) {
             if (loadExpLevel(ops)) {
+                this.Hierarchy = this.Hierarchys.get(this.Operators.indexOf(ops));
                 RT = true;
                 break;
             }
@@ -143,7 +144,7 @@ public class CommonExp extends ExpOrigin{
                 break;
             }
             if ((ops.contains(TOP) || TOP.equals("#")) && FIRST) {
-                loadExpCon(NOWOP, TMP);
+                loadExpCon(NOWOP, TMP, ops);
                 NOWOP = TOP;
                 if (TOP.equals("#")) {
                     break;
@@ -212,7 +213,7 @@ public class CommonExp extends ExpOrigin{
             for (String op : ops) {
                 int TMP = this.Exp.indexOf(op, IDX);
                 if (TMP != -1) {
-                    MIN = minvs(MIN, TMP);
+                    MIN = Math.min(MIN, TMP);
                 }
             }
         }
@@ -221,11 +222,6 @@ public class CommonExp extends ExpOrigin{
         } else {
             return MIN;
         }
-    }
-
-//    返回两个参数中最小值
-    public int minvs(int F, int S) {
-        return F > S ? S : F;
     }
 
 //  括号匹配
@@ -244,7 +240,7 @@ public class CommonExp extends ExpOrigin{
     }
 
 //    输入符号位置信息，创建下一个对象。
-    public void loadExpCon(String OP, String PAT) {
+    public void loadExpCon(String OP, String PAT, List<String> ops) {
         String Exp = "";
         String pat = "";
         for (String type : this.Patterns) {
@@ -260,6 +256,15 @@ public class CommonExp extends ExpOrigin{
         ExpOrigin expOrigin = new CommonExp(Exp);
         expOrigin.Operator = OP + pat;
         this.ExpCon.add(expOrigin);
+    }
+
+    public boolean matchExp(String Exp) {
+        return matchExp(new CommonExp(Exp));
+    }
+
+    public boolean matchExp(ExpOrigin expOrigin) {
+
+        return false;
     }
 
 

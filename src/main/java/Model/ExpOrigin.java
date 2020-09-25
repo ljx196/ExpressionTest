@@ -11,18 +11,22 @@ public abstract class ExpOrigin {
 
     List<String> Variables = new ArrayList<String>();
 
-    public String Exp;
+    String Exp;
 
     List<List<String>> Operators = Arrays.asList(Arrays.asList("=", ">=", "<=", ">", "<"),
         Arrays.asList("+", "-"),
         Arrays.asList("*", "/"),
         Arrays.asList("^", "_"));
 
+    List<String> Hierarchys = Arrays.asList("relation", "priorityoper", "oper", "orientation");
+
     List<String> Patterns = Arrays.asList("sin(e?x?p)", "cos(e?x?p)", "tan(e?x?p)", "(e?x?p)", "e?x?p");
 
     String Operator;
 
     String Type;
+
+    String Hierarchy;
 
     abstract public void simp();
 
