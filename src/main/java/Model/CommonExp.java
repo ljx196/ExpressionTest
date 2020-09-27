@@ -1,5 +1,7 @@
 package Model;
 
+import org.junit.Test;
+
 import java.util.List;
 
 public class CommonExp extends ExpOrigin{
@@ -14,6 +16,9 @@ public class CommonExp extends ExpOrigin{
         this.Operator = "#e?x?p";
         if (!paraseExp()) {
             this.Type = "Variable";
+            this.Hierarchy = "Variable";
+        } else {
+            this.Type = "Express";
         }
         collectVariables(this);
     }
@@ -258,19 +263,24 @@ public class CommonExp extends ExpOrigin{
         this.ExpCon.add(expOrigin);
     }
 
-    public boolean matchExp(String Exp) {
-        return matchExp(new CommonExp(Exp));
-    }
-
-    public boolean matchExp(ExpOrigin expOrigin) {
-
-        return false;
-    }
-
-
     @Override
     public String toString() {
         return this.Exp;
+    }
+
+    @Override
+    public String getHierarchy() {
+        return this.Hierarchy;
+    }
+
+    @Override
+    public List<ExpOrigin> getExpCon() {
+        return this.ExpCon;
+    }
+
+    @Override
+    public String getType() {
+        return this.Type;
     }
 
 }

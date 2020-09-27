@@ -2,9 +2,7 @@ import Model.CommonExp;
 import Model.ExpOrigin;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class TestClass {
 
@@ -88,6 +86,23 @@ public class TestClass {
 //        test.ShowStructure();
         expOrigin.ShowStructure();
         expOrigin.ShowVariables();
+    }
+
+    @Test
+    public void test9() {
+        ExpOrigin expOrigin = new CommonExp("1");
+        System.out.println(expOrigin);
+        List<String> s = Arrays.asList("1", "2");
+        if (s.contains(expOrigin.toString())) {
+            System.out.println("123");
+        }
+    }
+
+    public void changemap(Map<String, String> maps) {
+        for (String key : maps.keySet()) {
+            System.out.println(maps.get(key));
+            maps.put(key, "changed");
+        }
     }
 
 }

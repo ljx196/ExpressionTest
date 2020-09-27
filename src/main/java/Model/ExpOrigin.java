@@ -46,4 +46,10 @@ public abstract class ExpOrigin {
 
     abstract public boolean paraseExp();
 
+    abstract public String getHierarchy();
+
+    abstract public List<ExpOrigin> getExpCon();
+
+    abstract public String getType();
+
 }
