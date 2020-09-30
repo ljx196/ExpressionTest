@@ -1,5 +1,6 @@
 import Model.CommonExp;
 import Model.ExpOrigin;
+import javafx.util.Pair;
 import org.junit.Test;
 
 import java.util.*;
@@ -90,12 +91,8 @@ public class TestClass {
 
     @Test
     public void test9() {
-        ExpOrigin expOrigin = new CommonExp("1");
-        System.out.println(expOrigin);
-        List<String> s = Arrays.asList("1", "2");
-        if (s.contains(expOrigin.toString())) {
-            System.out.println("123");
-        }
+//        Map<Pair<ExpOrigin, ExpOrigin>,
+//        List<Map<Pair<ExpOrigin, ExpOrigin>, Map<String, String>>>
     }
 
     public void changemap(Map<String, String> maps) {
@@ -103,6 +100,10 @@ public class TestClass {
             System.out.println(maps.get(key));
             maps.put(key, "changed");
         }
+    }
+
+    public void changem(List<Map<String, String>> lm) {
+        lm.add(new HashMap<String, String>());
     }
 
 }
