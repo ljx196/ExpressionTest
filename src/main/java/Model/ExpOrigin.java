@@ -18,7 +18,7 @@ public abstract class ExpOrigin {
         Arrays.asList("*", "/"),
         Arrays.asList("^", "_"));
 
-    List<String> Hierarchys = Arrays.asList("relation", "priorityoper", "oper", "orientation");
+    List<String> Hierarchys = Arrays.asList("relation", "priorityoper", "oper", "orientation", "Variable");
 
     List<String> Patterns = Arrays.asList("sin(e?x?p)", "cos(e?x?p)", "tan(e?x?p)", "(e?x?p)", "e?x?p");
 
@@ -51,5 +51,7 @@ public abstract class ExpOrigin {
     abstract public List<ExpOrigin> getExpCon();
 
     abstract public String getType();
+
+    abstract public String getOperator();
 
 }

@@ -89,6 +89,11 @@ public class CommonExp extends ExpOrigin{
     }
 
     @Override
+    public String getOperator() {
+        return Operator;
+    }
+
+    @Override
     public boolean paraseExp() {
 //        怎么解析 目前先直接 通过加减乘除后面可以添加；
         boolean RT = false;
