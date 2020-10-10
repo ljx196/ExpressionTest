@@ -169,23 +169,29 @@ public class TestClass {
     @Test
     public void test15() {
         ExpEngine expEngine = new ExpEngine();
-        System.out.println(expEngine.matchExp("cos(a)+b+d", "cos(b+c)+c"));
+        System.out.println(expEngine.matchExp("cos(a)+b+d", "cos(b)+c"));
         System.out.println("123");
     }
 
     @Test
     public void test16() {
         Map<String, String> m = new HashMap<String, String>();
+        List<String> l = new ArrayList<String>();
         m.put("1", "1");
         m.put("2", "2");
         m.put("3", "3");
         m.put("4", "4");
         m.put("5", "5");
-        for (String s : m.keySet()) {
-            if (s.equals("2") || s.equals("4")) {
-                m.remove(s);
+        for (String ss : m.keySet()) {
+            if (ss.equals("1") || ss.equals("3")) {
+                l.add(ss);
             }
         }
-        System.out.println(m.size());
+        for (String ss : l) {
+            m.remove(ss);
+        }
+        for (String ss : m.keySet()) {
+            System.out.println(ss);
+        }
     }
 }

@@ -31,12 +31,15 @@ public class ExpEngine implements Engine {
         boolean USED = false;
 
         for (; iexp1 < expOrigin.getExpCon().size(); iexp1++) {
+            if (iexp2 >= expOrigin1.getExpCon().size()) {
+                USED = true;
+                continue;
+            }
             for (iexp2 = !USED ? iexp2 : 0; iexp2 < expOrigin1.getExpCon().size(); iexp2++) {
                 USED = true;
                 if (expOrigin.getExpCon().get(iexp1).getHierarchy().equals(expOrigin1.getExpCon().get(iexp2).getHierarchy())) {
                     if (matchedCase.size() == 0) {
                         matchMap.add(new HashMap<ExpOrigin, ExpOrigin>());
-                        matchMap.get(0).put(expOrigin.getExpCon().get(iexp1), expOrigin1.getExpCon().get(iexp2));
                         matchedCase.add(new HashMap<Pair<ExpOrigin, ExpOrigin>, List<Map<ExpOrigin, ExpOrigin>>>());
                     }
                     if (preciseMatch(expOrigin.getExpCon().get(iexp1), expOrigin1.getExpCon().get(iexp2), idx)) {
@@ -83,12 +86,13 @@ public class ExpEngine implements Engine {
 
         Map<Pair<ExpOrigin, ExpOrigin>, List<Map<ExpOrigin, ExpOrigin>>> TMP = new HashMap<Pair<ExpOrigin, ExpOrigin>, List<Map<ExpOrigin, ExpOrigin>>>(matchedCase.get(idx));
         boolean FLAG = false;
-        if (matchMap.get(idx).containsKey(expOrigin)) {
+        if (matchMap.get(idx).containsKey(expOrigin) || matchMap.get(idx).containsKey(expOrigin1)) {
             removeMap(TMP, TP);
+            TMP.put(TP, new ArrayList<Map<ExpOrigin, ExpOrigin>>());
             FLAG = true;
         }
 
-        boolean RT = preciseMatchs(expOrigin, expOrigin1, 0, 0, 0, TMP.get(new Pair<ExpOrigin, ExpOrigin>(expOrigin, expOrigin1)), null);
+        boolean RT = preciseMatchs(expOrigin, expOrigin1, 0, 0, 0, TMP.get(TP), null);
 
         if (RT) {
             if (FLAG) {
@@ -111,6 +115,7 @@ public class ExpEngine implements Engine {
         if (judgeEqual(expOrigin, expOrigin1, iidx, TMP)) {
             return true;
         }
+        //todo judgeEqual位置错误，需要改到循环中进行判断
 
         boolean USED = false;
         boolean FLAG = false;
@@ -120,6 +125,10 @@ public class ExpEngine implements Engine {
         }
 
         for (; e1 < expOrigin.getExpCon().size(); ++e1) {
+            if (e2 >= expOrigin1.getExpCon().size()) {
+                USED = true;
+                continue;
+            }
             for (e2 = !USED ? e2 : 0 ; e2 < expOrigin1.getExpCon().size(); ++e2) {
                 USED = true;
                 if (preciseMatchs(expOrigin.getExpCon().get(e1), expOrigin1.getExpCon().get(e2), 0, 0, iidx, TMP, null)) {
@@ -150,12 +159,12 @@ public class ExpEngine implements Engine {
                         TMP.get(iidx).put(expOrigin.getExpCon().get(e1), expOrigin1.getExpCon().get(e2));
                         TMP.get(iidx).put(expOrigin.getExpCon().get(e2), expOrigin1.getExpCon().get(e1));
                     }
+
                     tmatched.put(expOrigin.getExpCon().get(e1), expOrigin1.getExpCon().get(e2));
                     tmatched.put(expOrigin.getExpCon().get(e2), expOrigin1.getExpCon().get(e1));
                 }
             }
         }
-
         return expOrigin.getExpCon().size() * 2 == tmatched.size() || FLAG;
     }
 
@@ -174,5 +183,14 @@ public class ExpEngine implements Engine {
 
 //    去掉TMP中含有TP的部分
     public void removeMap(Map<Pair<ExpOrigin, ExpOrigin>, List<Map<ExpOrigin, ExpOrigin>>> TMP, Pair<ExpOrigin, ExpOrigin> TP) {
+        List<Pair<ExpOrigin, ExpOrigin>> LTMP = new ArrayList<Pair<ExpOrigin, ExpOrigin>>();
+        for (Pair<ExpOrigin, ExpOrigin> PAIR : TMP.keySet()) {
+            if (PAIR.getKey() == TP.getKey() || PAIR.getKey() == TP.getValue() || PAIR.getValue() == TP.getKey() || PAIR.getValue() == TP.getValue()) {
+                LTMP.add(PAIR);
+            }
+        }
+        for (Pair<ExpOrigin, ExpOrigin> PAIR : LTMP) {
+            TMP.remove(PAIR);
+        }
     }
 }
