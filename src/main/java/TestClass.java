@@ -83,7 +83,7 @@ public class TestClass {
 
     @Test
     public void test8() {
-        CommonExp expOrigin = new CommonExp("f(x)>=a*x^2+b*x+c");
+        CommonExp expOrigin = new CommonExp("a");
         CommonExp expOrigin1 = new CommonExp("f(x)>=cos(a+b)");
         String s = "123";
         String b = s;
@@ -169,7 +169,7 @@ public class TestClass {
     @Test
     public void test15() {
         ExpEngine expEngine = new ExpEngine();
-        System.out.println(expEngine.matchExp("cos(a)+b+d", "cos(b)+c"));
+        System.out.println(expEngine.matchExp("a+b", "c+d"));
         System.out.println("123");
     }
 
@@ -193,5 +193,25 @@ public class TestClass {
         for (String ss : m.keySet()) {
             System.out.println(ss);
         }
+    }
+
+    @Test
+    public void test17() {
+        List<Map<String, String>> lm = new ArrayList<Map<String, String>>();
+        Map<String, String> m = new HashMap<String, String>();
+        m.put("1", "2");
+        Map<String, String> m1 = new HashMap<String, String>();
+        m1.put("2", "2");
+        lm.add(m);
+        lm.add(m1);
+        Map<String, String> m2 = new HashMap<String, String>(lm.get(1));
+        System.out.println(lm.indexOf(m2));
+        lm.get(1).put("2", "3");
+        System.out.println(m2.get("3"));
+    }
+
+    public boolean p1() {
+        System.out.println("1");
+        return true;
     }
 }

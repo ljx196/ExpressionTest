@@ -218,7 +218,7 @@ public class CommonExp extends ExpOrigin{
 
 //    找到IDX开始第一个OP,如果没有则返回-1
     public int indexFirstOP(int IDX) {
-        int MIN = 999;
+        int MIN = 9999;
         for (List<String> ops : this.Operators) {
             for (String op : ops) {
                 int TMP = this.Exp.indexOf(op, IDX);
@@ -227,7 +227,7 @@ public class CommonExp extends ExpOrigin{
                 }
             }
         }
-        if (MIN == 999) {
+        if (MIN == 9999) {
             return -1;
         } else {
             return MIN;
