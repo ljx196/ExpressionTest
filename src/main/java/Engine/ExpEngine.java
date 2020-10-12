@@ -10,7 +10,7 @@ import java.util.Map;
 
 
 //todo 过滤不满足条件的映射
-//todo 加强变量匹配规则
+//todo 加强变量匹配规则 x^2 x_1
 //todo 增加表达式合并同类项等功能
 public class ExpEngine implements Engine {
 
@@ -148,7 +148,7 @@ public class ExpEngine implements Engine {
                 }
             }
         }
-        return expOrigin.getExpCon().size() * 2 == tmatched.size() || FLAG;
+        return (expOrigin.getExpCon().size() * 2 == tmatched.size() || FLAG) && expOrigin.getExpCon().size() != 0;
     }
 
     //判断两个exp是否是相等的变量如果传入的不是两个相等的变量返回false
@@ -156,10 +156,11 @@ public class ExpEngine implements Engine {
         if (!expOrigin.getHierarchy().equals("Variable") || !expOrigin.getHierarchy().equals("Variable")) {
             return false;
         }
-        if (judgeOper(expOrigin.getOperator(), expOrigin1.getOperator())) {
-            if (TMP.get(iidx).get(expOrigin) == null || TMP.get(iidx).get(expOrigin).equals(expOrigin1)) {
-                return true;
-            }
+        if (judgeOper(expOrigin, expOrigin1)) {
+//            if (TMP.get(iidx).get(expOrigin) == null || TMP.get(iidx).get(expOrigin).equals(expOrigin1)) {
+//                return true;
+//            }
+            return true;
         }
         return false;
     }
@@ -199,10 +200,11 @@ public class ExpEngine implements Engine {
         return TMP.containsKey(expOrigin) || TMP.containsKey(expOrigin1);
     }
 
-    private boolean judgeOper(String o1, String o2) {
-        o1 = o1.replaceAll("(.*)e\\?x\\?p(.*)", "$1$2");
-        o2 = o2.replaceAll("(.*)e\\?x\\?p(.*)", "$1$2");
-        if (o1.equals(o2) || (o1.equals("#") && o2.equals("+"))) {
+    private boolean judgeOper(ExpOrigin o1, ExpOrigin o2) {
+        String so1 = o1.getOperator().replaceAll("(.*)e\\?x\\?p(.*)", "$1$2").replace("#", "+");
+        String so2 = o2.getOperator().replaceAll("(.*)e\\?x\\?p(.*)", "$1$2").replace("#", "+");
+
+        if (so1.equals(so2)) {
             return true;
         }
         return false;
