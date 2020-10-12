@@ -203,10 +203,10 @@ public class ExpEngine implements Engine {
     private boolean judgeOper(ExpOrigin o1, ExpOrigin o2) {
         String so1 = o1.getOperator().replaceAll("(.*)e\\?x\\?p(.*)", "$1$2").replace("#", "+");
         String so2 = o2.getOperator().replaceAll("(.*)e\\?x\\?p(.*)", "$1$2").replace("#", "+");
-
         if (so1.equals(so2)) {
             return true;
         }
+
         return false;
     }
 }
