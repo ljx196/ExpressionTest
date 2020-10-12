@@ -83,14 +83,14 @@ public class TestClass {
 
     @Test
     public void test8() {
-        CommonExp expOrigin = new CommonExp("a");
-        CommonExp expOrigin1 = new CommonExp("f(x)>=cos(a+b)");
+        CommonExp expOrigin = new CommonExp("-a+b");
+        CommonExp expOrigin1 = new CommonExp("-2*sin(x+b)*cos(x)");
         String s = "123";
         String b = s;
         b = "345";
 //        test.ShowStructure();
-        expOrigin.ShowStructure();
-        expOrigin.ShowVariables();
+//        expOrigin.ShowStructure();
+//        expOrigin.ShowVariables();
     }
 
     @Test
@@ -169,7 +169,7 @@ public class TestClass {
     @Test
     public void test15() {
         ExpEngine expEngine = new ExpEngine();
-        System.out.println(expEngine.matchExp("2+3", "4+3"));
+        System.out.println(expEngine.Match("3^(1/2)*cos(2*x-Pi/3)-2*sin(x+2)*cos(x)", "-2*sin(x+2)*cos(x)"));
         System.out.println("123");
     }
 
@@ -213,5 +213,19 @@ public class TestClass {
     public boolean p1() {
         System.out.println("1");
         return true;
+    }
+
+    @Test
+    public void test18() {
+        Map<String, String> m = new HashMap<String, String>();
+        m.put("1", "1");
+        m.put("2", "1");
+        m.put("3", "1");
+        m.put("4", "1");
+        m.put("5", "1");
+        m.keySet().removeIf(key -> {
+            return key.equals("1");
+        });
+        System.out.println(m.size());
     }
 }

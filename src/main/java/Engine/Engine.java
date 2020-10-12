@@ -6,8 +6,8 @@ import java.util.Map;
 
 public interface Engine {
 
-    public boolean matchExp(String Exp, String Exp1);
+    boolean matchExp(ExpOrigin expOrigin, ExpOrigin expOrigin1, int iexp1, int iexp2, int idx);
 
-    public boolean matchExp(ExpOrigin expOrigin, ExpOrigin expOrigin1, int iexp1, int iexp2, int idx);
+    boolean Match(String Exp, String Exp1);
 
 }

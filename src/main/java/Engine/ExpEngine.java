@@ -9,9 +9,13 @@ import java.util.List;
 import java.util.Map;
 
 
-//todo 过滤不满足条件的映射
-//todo 加强变量匹配规则 x^2 x_1
+//todo 过滤不满足条件的映射 ✔
+//todo 加强变量匹配规则 x^2 x_1 ✔
+//todo 表达式搜索匹配， 类似于a^e+c e^f是匹配的 ✔
+//todo 表达式转换
 //todo 增加表达式合并同类项等功能
+//todo 重写解析ExpOrigin
+//todo 完善边界条件 >= 和 +- /*等是不同的
 public class ExpEngine implements Engine {
 
 //    匹配映射
@@ -20,8 +24,30 @@ public class ExpEngine implements Engine {
 //    变量映射
     List<Map<Pair<ExpOrigin, ExpOrigin>, List<Map<ExpOrigin, ExpOrigin>>>> matchedCase = new ArrayList<Map<Pair<ExpOrigin, ExpOrigin>, List<Map<ExpOrigin, ExpOrigin>>>>();
 
-    public boolean matchExp(String Exp, String Exp1) {
-        return matchExp(new CommonExp(Exp), new CommonExp(Exp1), 0, 0, 0);
+    public boolean Match(String Exp, String Exp1) {
+        ExpOrigin expOrigin = new CommonExp(Exp);
+        ExpOrigin expOrigin1 = new CommonExp(Exp1);
+
+        boolean RT = matchExp(expOrigin, expOrigin1, 0, 0, 0) || searchMatch(expOrigin, expOrigin1);
+
+//        filteMap(expOrigin, expOrigin1);
+
+        return RT;
+    }
+
+    public boolean searchMatch(ExpOrigin expOrigin, ExpOrigin expOrigin1) {
+        for (ExpOrigin e : expOrigin.getExpCon()) {
+            clearMap();
+            if (matchExp(e, expOrigin1, 0, 0, 0)) {
+                return true;
+            } else if (e.getExpCon().size() != 0) {
+                if (searchMatch(e, expOrigin1)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 //    第一步，先匹配type，若type相同，则说明这两个Exp处于同一个层级，接下来匹配子串，在同层的式子可以部分匹配，但是同层之下的必须精确匹配，即匹配上的式子环境应该一致
@@ -34,6 +60,11 @@ public class ExpEngine implements Engine {
         boolean RT = false;
         boolean USED = false;
 
+        if (matchedCase.size() == 0) {
+            matchMap.add(new HashMap<ExpOrigin, ExpOrigin>());
+            matchedCase.add(new HashMap<Pair<ExpOrigin, ExpOrigin>, List<Map<ExpOrigin, ExpOrigin>>>());
+        }
+
         for (; iexp1 < expOrigin.getExpCon().size(); iexp1++) {
             if (iexp2 >= expOrigin1.getExpCon().size() && !USED) {
                 USED = true;
@@ -42,10 +73,6 @@ public class ExpEngine implements Engine {
             for (iexp2 = !USED ? iexp2 : 0; iexp2 < expOrigin1.getExpCon().size(); iexp2++) {
                 USED = true;
                 if (expOrigin.getExpCon().get(iexp1).getHierarchy().equals(expOrigin1.getExpCon().get(iexp2).getHierarchy())) {
-                    if (matchedCase.size() == 0) {
-                        matchMap.add(new HashMap<ExpOrigin, ExpOrigin>());
-                        matchedCase.add(new HashMap<Pair<ExpOrigin, ExpOrigin>, List<Map<ExpOrigin, ExpOrigin>>>());
-                    }
                     if (preciseMatch(expOrigin.getExpCon().get(iexp1), expOrigin1.getExpCon().get(iexp2), idx)) {
                         if (judgeIsHave(matchMap.get(idx), expOrigin.getExpCon().get(iexp1), expOrigin1.getExpCon().get(iexp2))) {
                             Map<ExpOrigin, ExpOrigin> TMP = new HashMap<ExpOrigin, ExpOrigin>(matchMap.get(idx));
@@ -200,13 +227,42 @@ public class ExpEngine implements Engine {
         return TMP.containsKey(expOrigin) || TMP.containsKey(expOrigin1);
     }
 
+    //判断两个变量是否相等
     private boolean judgeOper(ExpOrigin o1, ExpOrigin o2) {
         String so1 = o1.getOperator().replaceAll("(.*)e\\?x\\?p(.*)", "$1$2").replace("#", "+");
         String so2 = o2.getOperator().replaceAll("(.*)e\\?x\\?p(.*)", "$1$2").replace("#", "+");
+        if (o1.getType().equals("Constant")) {
+            if (o1.toString().equals(o2.toString())) {
+                return true;
+            } else {
+                return false;
+            }
+        }
         if (so1.equals(so2)) {
             return true;
         }
-
         return false;
+    }
+
+    private void filteMap(ExpOrigin expOrigin, ExpOrigin expOrigin1) {
+        matchMap.removeIf(map -> {
+           return map.size() != expOrigin1.getExpCon().size() * 2;
+        });
+        matchedCase.removeIf(map -> {
+           return map.size() != expOrigin1.getExpCon().size();
+        });
+        for (Map<Pair<ExpOrigin, ExpOrigin>, List<Map<ExpOrigin, ExpOrigin>>> mp : matchedCase) {
+            for (Pair<ExpOrigin, ExpOrigin> p : mp.keySet()) {
+                int minSize = Math.max(Math.min(p.getKey().getExpCon().size(), p.getValue().getExpCon().size()), 1);
+                mp.get(p).removeIf(l -> {
+                   return l.size() != minSize * 2;
+                });
+            }
+        }
+    }
+
+    private void clearMap() {
+        matchedCase.clear();
+        matchMap.clear();
     }
 }

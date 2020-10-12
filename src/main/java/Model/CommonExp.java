@@ -3,6 +3,7 @@ package Model;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class CommonExp extends ExpOrigin{
 
@@ -15,7 +16,11 @@ public class CommonExp extends ExpOrigin{
         this.Exp = Exp;
         this.Operator = "#e?x?p";
         if (!paraseExp()) {
-            this.Type = "Variable";
+            if (isInteger(this.Exp)) {
+                this.Type = "Constant";
+            } else{
+                this.Type = "Variable";
+            }
             this.Hierarchy = "Variable";
         } else {
             this.Type = "Express";
@@ -148,9 +153,13 @@ public class CommonExp extends ExpOrigin{
             }
             if (NOWOP == null) {
                 NOWOP = TOP;
+//                TMP = TOP;
                 TOP = "";
             }
-            if (NOWOP.equals("#") && TOP.equals("#")) {
+            if (NOWOP.equals("#") && TOP.equals("#") || !ops.contains(NOWOP) && TOP.equals("#")) {
+                break;
+            }
+            if (ops.contains(NOWOP) && !RT && TOP.equals("#")) {
                 break;
             }
             if ((ops.contains(TOP) || TOP.equals("#")) && FIRST) {
@@ -263,6 +272,9 @@ public class CommonExp extends ExpOrigin{
                 break;
             }
         }
+        if (OP.equals("+") || OP.equals("-")) {
+            Exp = OP + Exp;
+        }
         ExpOrigin expOrigin = new CommonExp(Exp);
         expOrigin.Operator = OP + pat;
         this.ExpCon.add(expOrigin);
@@ -270,7 +282,7 @@ public class CommonExp extends ExpOrigin{
 
     @Override
     public String toString() {
-        return this.Exp;
+        return this.Operator.replaceAll("e\\?x\\?p", this.Exp);
     }
 
     @Override
@@ -286,6 +298,11 @@ public class CommonExp extends ExpOrigin{
     @Override
     public String getType() {
         return this.Type;
+    }
+
+    public static boolean isInteger(String str) {
+        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+        return pattern.matcher(str).matches();
     }
 
 }

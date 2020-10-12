@@ -18,7 +18,7 @@ public abstract class ExpOrigin {
         Arrays.asList("*", "/"),
         Arrays.asList("^", "_"));
 
-    List<String> Hierarchys = Arrays.asList("relation", "priorityoper", "oper", "orientation", "Variable");
+    List<String> Hierarchys = Arrays.asList("relation", "priorityoper", "oper", "orientation", "Variable", "Constant");
 
     List<String> Patterns = Arrays.asList("sin(e?x?p)", "cos(e?x?p)", "tan(e?x?p)", "(e?x?p)", "e?x?p");
 
