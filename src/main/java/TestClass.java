@@ -75,7 +75,7 @@ public class TestClass {
 
     @Test
     public void test7() {
-        CommonExp commonExp = new CommonExp("a-sin(x)*cos(x)");
+        CommonExp commonExp = new CommonExp("-sin(x)*cos(x)");
         commonExp.ShowStructure();
         commonExp.ShowPlainStru();
         commonExp.ShowVariables();

@@ -158,13 +158,14 @@ public class CommonExp extends ExpOrigin{
             if (NOWOP.equals("#") && TOP.equals("#") || !ops.contains(NOWOP) && TOP.equals("#")) {
                 break;
             }
-            if (ops.contains(NOWOP) && !RT && TOP.equals("#")) {
+            if (ops.contains(NOWOP) && !RT && TOP.equals("#") && !ops.contains("+")) {
                 break;
             }
             if ((ops.contains(TOP) || TOP.equals("#")) && FIRST) {
                 loadExpCon(NOWOP, TMP, ops);
                 NOWOP = TOP;
                 if (TOP.equals("#")) {
+                    RT = true;
                     break;
                 }
                 TMP = "";
