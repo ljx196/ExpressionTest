@@ -276,6 +276,7 @@ public class CommonExp extends ExpOrigin{
 //        if (OP.equals("+") || OP.equals("-")) {
 //            Exp = OP + Exp;
 //        }
+
         ExpOrigin expOrigin = new CommonExp(Exp);
         expOrigin.Operator = OP + pat;
         this.ExpCon.add(expOrigin);

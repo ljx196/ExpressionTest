@@ -17,6 +17,8 @@ import java.util.Map;
 //todo 重写解析ExpOrigin
 //todo 完善边界条件 >= 和 +- /*等是不同的
 //todo 兼容f(x) g(x) e(g)等形式
+//todo 兼容特殊形式例如数列那边
+//todo 兼容不完全匹配例如 a*x^2+c 与 a*x^2+d*x+c 是能匹配上的此时d=0
 public class ExpEngine implements Engine {
 
 //    匹配映射

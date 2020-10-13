@@ -75,7 +75,8 @@ public class TestClass {
 
     @Test
     public void test7() {
-        CommonExp commonExp = new CommonExp("-sin(x)*cos(x)");
+        CommonExp commonExp = new CommonExp("-sin(x)>=3*x");
+        CommonExp commonExp1 = new CommonExp("a-sin(x)*cos(x)");
         commonExp.ShowStructure();
         commonExp.ShowPlainStru();
         commonExp.ShowVariables();
@@ -170,7 +171,7 @@ public class TestClass {
     @Test
     public void test15() {
         ExpEngine expEngine = new ExpEngine();
-        System.out.println(expEngine.Match("f(x)=a*x^2+b*x+c", "g(t)=d*e^2+g"));
+        System.out.println(expEngine.Match("f(x)=a-cos(x+c)", "-cos(x+b)"));
 //        System.out.println(expEngine.Match("3^(1/2)*cos(2*x-Pi/3)-2*sin(x+2)*cos(x)", "-2*sin(b+2)*cos(x)"));
         System.out.println("123");
     }
