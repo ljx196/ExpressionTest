@@ -16,6 +16,7 @@ import java.util.Map;
 //todo 增加表达式合并同类项等功能
 //todo 重写解析ExpOrigin
 //todo 完善边界条件 >= 和 +- /*等是不同的
+//todo 兼容f(x) g(x) e(g)等形式
 public class ExpEngine implements Engine {
 
 //    匹配映射
@@ -30,7 +31,7 @@ public class ExpEngine implements Engine {
 
         boolean RT = matchExp(expOrigin, expOrigin1, 0, 0, 0) || searchMatch(expOrigin, expOrigin1);
 
-//        filteMap(expOrigin, expOrigin1);
+        filteMap(expOrigin, expOrigin1);
 
         return RT;
     }
@@ -134,14 +135,14 @@ public class ExpEngine implements Engine {
             return false;
         }
         if (TMP.size() == 0) {
-            TMP.add(new HashMap<ExpOrigin, ExpOrigin>());
+            TMP.add(new HashMap<>());
         }
 
         boolean USED = false;
         boolean FLAG = false;
 
         if (tmatched == null) {
-            tmatched = new HashMap<ExpOrigin, ExpOrigin>();
+            tmatched = new HashMap<>();
         }
 
         if (judgeEqual(expOrigin, expOrigin1, iidx, TMP)) {
@@ -159,7 +160,7 @@ public class ExpEngine implements Engine {
                 if (judgeEqual(expOrigin.getExpCon().get(e1), expOrigin1.getExpCon().get(e2), iidx, TMP) || preciseMatchs(expOrigin.getExpCon().get(e1), expOrigin1.getExpCon().get(e2), 0, 0, iidx, TMP, null)) {
                     if (judgeIsHave(TMP.get(iidx), expOrigin.getExpCon().get(e1), expOrigin1.getExpCon().get(e2)) || judgeIsHave(tmatched, expOrigin.getExpCon().get(e1), expOrigin1.getExpCon().get(e2))) {
                         Map<ExpOrigin, ExpOrigin> TMPss = new HashMap<ExpOrigin, ExpOrigin>(TMP.get(iidx));
-                        Map<ExpOrigin, ExpOrigin> ttmatched = new HashMap<ExpOrigin, ExpOrigin>(tmatched);
+                        Map<ExpOrigin, ExpOrigin> ttmatched = new HashMap<>(tmatched);
                         if (expOrigin.getExpCon().get(e1).getHierarchy().equals("Variable")) {
                             constructNewMatch(TMPss, expOrigin.getExpCon().get(e1), expOrigin1.getExpCon().get(e2));
                             TMP.add(TMPss);

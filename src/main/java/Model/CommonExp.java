@@ -153,7 +153,6 @@ public class CommonExp extends ExpOrigin{
             }
             if (NOWOP == null) {
                 NOWOP = TOP;
-//                TMP = TOP;
                 TOP = "";
             }
             if (NOWOP.equals("#") && TOP.equals("#") || !ops.contains(NOWOP) && TOP.equals("#")) {
@@ -212,7 +211,7 @@ public class CommonExp extends ExpOrigin{
     public int matchPattern(int IDX, String type) {
         String ftype = type.replaceAll("(.*)e\\?x\\?p(.*)", "$1");
         String ltype = type.replaceAll("(.*)e\\?x\\?p(.*)", "$2");
-        if (type.indexOf("(") == -1) {
+        if (!type.contains("(")) {
             int TMP = indexFirstOP(IDX);
             if (TMP == -1) {
                 return this.Exp.length();
@@ -220,7 +219,7 @@ public class CommonExp extends ExpOrigin{
             return TMP;
         } else {
             int PIT = IDX + ftype.length();
-            PIT = matchBracket(PIT, 1);
+            PIT = matchBracket(this.Exp, PIT, 1);
             return PIT;
         }
     }
@@ -244,9 +243,9 @@ public class CommonExp extends ExpOrigin{
     }
 
 //  括号匹配
-    public int matchBracket(int PIT, int count) {
+    public int matchBracket(String E, int PIT, int count) {
         while (count != 0) {
-            String TMP = String.valueOf(this.Exp.charAt(PIT));
+            String TMP = String.valueOf(E.charAt(PIT));
             if (TMP.equals("(")) {
                 count++;
             }
@@ -265,16 +264,17 @@ public class CommonExp extends ExpOrigin{
         for (String type : this.Patterns) {
             String ftype = type.replaceAll("(.*)e\\?x\\?p(.*)", "$1");
             String ltype = type.replaceAll("(.*)e\\?x\\?p(.*)", "$2");
-            if (PAT.indexOf(ftype) == 0) {
+            if (PAT.indexOf(ftype) == 0 && (this.Patterns.indexOf(type) == this.Patterns.size() - 1 || isLegal(PAT))) {
                 String TPAT = type.replaceAll("\\(", "\\\\(").replaceAll("\\)", "\\\\)").replaceAll("e\\?x\\?p", "(.*)");
                 Exp = PAT.replaceAll(TPAT, "$1");
                 pat = type;
                 break;
             }
         }
-        if (OP.equals("+") || OP.equals("-")) {
-            Exp = OP + Exp;
-        }
+
+//        if (OP.equals("+") || OP.equals("-")) {
+//            Exp = OP + Exp;
+//        }
         ExpOrigin expOrigin = new CommonExp(Exp);
         expOrigin.Operator = OP + pat;
         this.ExpCon.add(expOrigin);
@@ -300,9 +300,13 @@ public class CommonExp extends ExpOrigin{
         return this.Type;
     }
 
-    public static boolean isInteger(String str) {
+    public boolean isInteger(String str) {
         Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
         return pattern.matcher(str).matches();
+    }
+
+    private boolean isLegal(String PAT) {
+        return matchBracket(PAT, PAT.indexOf('(') + 1, 1) == PAT.length();
     }
 
 }

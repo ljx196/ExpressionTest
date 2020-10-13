@@ -25,7 +25,7 @@ public class TestClass {
 
     @Test
     public void test2() {
-        ExpOrigin expOrigin = new CommonExp("-a+c+d-e/f*d");
+        ExpOrigin expOrigin = new CommonExp("-a*b");
         System.out.println(expOrigin.toString());
         expOrigin.ShowStructure();
     }
@@ -75,7 +75,7 @@ public class TestClass {
 
     @Test
     public void test7() {
-        CommonExp commonExp = new CommonExp("a+b+(c+d+a)");
+        CommonExp commonExp = new CommonExp("a-sin(x)*cos(x)");
         commonExp.ShowStructure();
         commonExp.ShowPlainStru();
         commonExp.ShowVariables();
@@ -83,8 +83,9 @@ public class TestClass {
 
     @Test
     public void test8() {
-        CommonExp expOrigin = new CommonExp("-a+b");
-        CommonExp expOrigin1 = new CommonExp("-2*sin(x+b)*cos(x)");
+//        CommonExp expOrigin = new CommonExp("-a+b");
+//        CommonExp expOrigin1 = new CommonExp("f(x)=-2*sin(x+b)*cos(x)");
+        CommonExp expOrigin1 = new CommonExp("a-3*x");
         String s = "123";
         String b = s;
         b = "345";
@@ -169,7 +170,8 @@ public class TestClass {
     @Test
     public void test15() {
         ExpEngine expEngine = new ExpEngine();
-        System.out.println(expEngine.Match("3^(1/2)*cos(2*x-Pi/3)-2*sin(x+2)*cos(x)", "-2*sin(x+2)*cos(x)"));
+        System.out.println(expEngine.Match("f(x)=a*x^2+b*x+c", "g(t)=d*e^2+g"));
+//        System.out.println(expEngine.Match("3^(1/2)*cos(2*x-Pi/3)-2*sin(x+2)*cos(x)", "-2*sin(b+2)*cos(x)"));
         System.out.println("123");
     }
 
@@ -217,15 +219,7 @@ public class TestClass {
 
     @Test
     public void test18() {
-        Map<String, String> m = new HashMap<String, String>();
-        m.put("1", "1");
-        m.put("2", "1");
-        m.put("3", "1");
-        m.put("4", "1");
-        m.put("5", "1");
-        m.keySet().removeIf(key -> {
-            return key.equals("1");
-        });
-        System.out.println(m.size());
+        String s = "1123";
+        System.out.println(s.indexOf('1'));
     }
 }
