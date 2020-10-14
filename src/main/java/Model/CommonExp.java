@@ -1,11 +1,9 @@
 package Model;
 
-import org.junit.Test;
-
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class CommonExp extends ExpOrigin{
+public class CommonExp extends ExpOrigin {
 
     public CommonExp() {
 
@@ -14,11 +12,12 @@ public class CommonExp extends ExpOrigin{
     public CommonExp(String Exp) {
         this();
         this.Exp = Exp;
+        initExp(Exp);
         this.Operator = "#e?x?p";
         if (!paraseExp()) {
             if (isInteger(this.Exp)) {
                 this.Type = "Constant";
-            } else{
+            } else {
                 this.Type = "Variable";
             }
             this.Hierarchy = "Variable";
@@ -39,7 +38,7 @@ public class CommonExp extends ExpOrigin{
     }
 
     public void ShowPlainStru() {
-        for (ExpOrigin exp: this.ExpCon) {
+        for (ExpOrigin exp : this.ExpCon) {
             System.out.print(exp.Operator.replaceAll("e\\?x\\?p", exp.Exp) + " ");
         }
         System.out.println();
@@ -108,23 +107,23 @@ public class CommonExp extends ExpOrigin{
                 RT = true;
                 break;
             }
-        }
+}
         return RT;
-    }
+                }
 
     public void collectVariables(ExpOrigin expOrigin) {
         if (expOrigin.Type != null && expOrigin.Type.equals("Variable")) {
             if (!this.Variables.contains(expOrigin.Exp)) {
                 this.Variables.add(expOrigin.Exp);
             }
-            return ;
+            return;
         }
         for (ExpOrigin expOrigin1 : expOrigin.ExpCon) {
             collectVariables(expOrigin1);
         }
     }
 
-//    从SIDX的位置开始，寻找this.Exp中第一个存在符号的位置
+    //    从SIDX的位置开始，寻找this.Exp中第一个存在符号的位置
     public String getOperator(int SIDX) {
         for (int i = SIDX; i < this.Exp.length(); ++i) {
             for (List<String> ops : this.Operators) {
@@ -139,7 +138,7 @@ public class CommonExp extends ExpOrigin{
         return "+";
     }
 
-//    按照分句的等级来划分 如果有操作匹配上了则返回true
+    //    按照分句的等级来划分 如果有操作匹配上了则返回true
     public boolean loadExpLevel(List<String> ops) {
         boolean RT = false;
         boolean FIRST = false;
@@ -181,7 +180,7 @@ public class CommonExp extends ExpOrigin{
         return RT;
     }
 
-//    找到IDX为起点的OP 如果没有则返回#
+    //    找到IDX为起点的OP 如果没有则返回#
     public String findOP(int IDX) {
         for (List<String> ops : this.Operators) {
             for (String op : ops) {
@@ -193,22 +192,32 @@ public class CommonExp extends ExpOrigin{
         return "#";
     }
 
-//    找到IDX起点的TYPE
+    //    找到IDX起点的TYPE
     public String findPAT(int IDX) {
         int EIDX;
-        for (String type : this.Patterns) {
-            String ftype = type.replaceAll("(.*)e\\?x\\?p(.*)", "$1");
-            String ltype = type.replaceAll("(.*)e\\?x\\?p(.*)", "$2");
-            if (this.Exp.indexOf(ftype, IDX) != IDX) {
-                continue;
-            }
-            EIDX = matchPattern(IDX, type);
-            return this.Exp.substring(IDX, EIDX);
+
+        if (this.Exp.substring(IDX).matches("^[A-Za-z]*\\(.*")) {
+            String Type = this.Exp.substring(IDX).replaceAll("^([A-Za-z]*\\().*", "$1");
+            EIDX = matchPattern(IDX, Type + "e?x?p)");
+        } else {
+            EIDX = matchPattern(IDX, "e?x?p");
         }
-        return null;
+
+        return this.Exp.substring(IDX, EIDX);
+
+//        for (String type : this.Patterns) {
+//            String ftype = type.replaceAll("(.*)e\\?x\\?p(.*)", "$1");
+//            String ltype = type.replaceAll("(.*)e\\?x\\?p(.*)", "$2");
+//            if (this.Exp.indexOf(ftype, IDX) != IDX) {
+//                continue;
+//            }
+//            EIDX = matchPattern(IDX, type);
+//            return this.Exp.substring(IDX, EIDX);
+//        }
+//        return null;
     }
 
-//  匹配Pattern数据输入索引 Pattern类型，然后返回下一个OP的IDX
+    //  匹配Pattern数据输入索引 Pattern类型，然后返回下一个OP的IDX
     public int matchPattern(int IDX, String type) {
         String ftype = type.replaceAll("(.*)e\\?x\\?p(.*)", "$1");
         String ltype = type.replaceAll("(.*)e\\?x\\?p(.*)", "$2");
@@ -225,7 +234,7 @@ public class CommonExp extends ExpOrigin{
         }
     }
 
-//    找到IDX开始第一个OP,如果没有则返回-1
+    //    找到IDX开始第一个OP,如果没有则返回-1
     public int indexFirstOP(int IDX) {
         int MIN = 9999;
         for (List<String> ops : this.Operators) {
@@ -243,7 +252,7 @@ public class CommonExp extends ExpOrigin{
         }
     }
 
-//  括号匹配
+    //  括号匹配
     public int matchBracket(String E, int PIT, int count) {
         while (count != 0) {
             String TMP = String.valueOf(E.charAt(PIT));
@@ -258,24 +267,33 @@ public class CommonExp extends ExpOrigin{
         return PIT;
     }
 
-//    输入符号位置信息，创建下一个对象。
+    //    输入符号位置信息，创建下一个对象。
     public void loadExpCon(String OP, String PAT, List<String> ops) {
         String Exp = "";
         String pat = "";
-        for (String type : this.Patterns) {
-            String ftype = type.replaceAll("(.*)e\\?x\\?p(.*)", "$1");
-            String ltype = type.replaceAll("(.*)e\\?x\\?p(.*)", "$2");
-            if (PAT.indexOf(ftype) == 0 && (this.Patterns.indexOf(type) == this.Patterns.size() - 1 || isLegal(PAT))) {
-                String TPAT = type.replaceAll("\\(", "\\\\(").replaceAll("\\)", "\\\\)").replaceAll("e\\?x\\?p", "(.*)");
-                Exp = PAT.replaceAll(TPAT, "$1");
-                pat = type;
-                break;
-            }
-        }
-
-//        if (OP.equals("+") || OP.equals("-")) {
-//            Exp = OP + Exp;
+//        for (String type : this.Patterns) {
+//            String ftype = type.replaceAll("(.*)e\\?x\\?p(.*)", "$1");
+//            String ltype = type.replaceAll("(.*)e\\?x\\?p(.*)", "$2");
+//            if (PAT.indexOf(ftype) == 0 && (this.Patterns.indexOf(type) == this.Patterns.size() - 1 || isLegal(PAT))) {
+//                String TPAT = type.replaceAll("\\(", "\\\\(").replaceAll("\\)", "\\\\)").replaceAll("e\\?x\\?p", "(.*)");
+//                Exp = PAT.replaceAll(TPAT, "$1");
+//                pat = type;
+//                break;
+//            }
 //        }
+        if (PAT.matches("^[A-Za-z]*\\(.*")) {
+            String Type = PAT.replaceAll("^([A-Za-z]*\\().*", "$1");
+            int EIDX = matchBracket(PAT, Type.length(), 1);
+            Type = Type += "e?x?p)";
+            if (EIDX >= PAT.length()) {
+                String TPAT = Type.replaceAll("\\(", "\\\\(").replaceAll("\\)", "\\\\)").replaceAll("e\\?x\\?p", "(.*)");
+                Exp = PAT.replaceAll(TPAT, "$1");
+                pat = Type;
+            }
+        } else {
+            pat = "e?x?p";
+            Exp = PAT;
+        }
 
         ExpOrigin expOrigin = new CommonExp(Exp);
         expOrigin.Operator = OP + pat;
@@ -309,6 +327,16 @@ public class CommonExp extends ExpOrigin{
 
     private boolean isLegal(String PAT) {
         return matchBracket(PAT, PAT.indexOf('(') + 1, 1) == PAT.length();
+    }
+
+    private void initExp(String Exp) {
+        if (Exp.matches("^[A-Za-z]*\\(.*")) {
+            String Type = Exp.replaceAll("^([A-Za-z]*\\().*", "$1");
+            int EIDX = matchBracket(Exp, Type.length(), 1);
+            if (EIDX >= Exp.length()) {
+                this.Exp = "+" + this.Exp;
+            }
+        }
     }
 
 }

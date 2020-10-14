@@ -25,7 +25,7 @@ public class TestClass {
 
     @Test
     public void test2() {
-        ExpOrigin expOrigin = new CommonExp("-a*b");
+        ExpOrigin expOrigin = new CommonExp("(x+y)");
         System.out.println(expOrigin.toString());
         expOrigin.ShowStructure();
     }
@@ -75,8 +75,7 @@ public class TestClass {
 
     @Test
     public void test7() {
-        CommonExp commonExp = new CommonExp("-sin(x)>=3*x");
-        CommonExp commonExp1 = new CommonExp("a-sin(x)*cos(x)");
+        CommonExp commonExp = new CommonExp("-f(x+1)");
         commonExp.ShowStructure();
         commonExp.ShowPlainStru();
         commonExp.ShowVariables();
@@ -171,7 +170,7 @@ public class TestClass {
     @Test
     public void test15() {
         ExpEngine expEngine = new ExpEngine();
-        System.out.println(expEngine.Match("f(x)=a-cos(x+c)", "-cos(x+b)"));
+        System.out.println(expEngine.Match("f(x)=a*x^2+b*x+c", "a*x^2+c"));
 //        System.out.println(expEngine.Match("3^(1/2)*cos(2*x-Pi/3)-2*sin(x+2)*cos(x)", "-2*sin(b+2)*cos(x)"));
         System.out.println("123");
     }
@@ -222,5 +221,13 @@ public class TestClass {
     public void test18() {
         String s = "1123";
         System.out.println(s.indexOf('1'));
+    }
+
+    @Test
+    public void test19() {
+        String test = "+fasd(x)";
+        test.substring(4);
+        System.out.println(test.replaceAll("^([A-Za-z]*\\().*", "$1"));
+        System.out.println(test.matches("^[A-Za-z]*\\(.*"));
     }
 }

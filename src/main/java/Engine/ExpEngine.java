@@ -19,6 +19,7 @@ import java.util.Map;
 //todo 兼容f(x) g(x) e(g)等形式
 //todo 兼容特殊形式例如数列那边
 //todo 兼容不完全匹配例如 a*x^2+c 与 a*x^2+d*x+c 是能匹配上的此时d=0
+//todo 兼容数列的情况例如T_n=a_1*a_2\cdots a_n需要兼容拿到里面的信息，连乘连加
 public class ExpEngine implements Engine {
 
 //    匹配映射

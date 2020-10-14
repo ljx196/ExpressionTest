@@ -20,7 +20,7 @@ public abstract class ExpOrigin {
 
     List<String> Hierarchys = Arrays.asList("relation", "priorityoper", "oper", "orientation", "Variable", "Constant");
 
-    List<String> Patterns = Arrays.asList("sin(e?x?p)", "cos(e?x?p)", "tan(e?x?p)", "(e?x?p)", "e?x?p");
+    List<String> Patterns = Arrays.asList("sin(e?x?p)", "cos(e?x?p)", "tan(e?x?p)", "special", "(e?x?p)", "e?x?p");
 
     String Operator;
 
